@@ -1,0 +1,30 @@
+]how to solve error "Minimal BASH-like line editing is supported"
+Step 1: Boot in to the live Linux USB.
+
+Step 2: You need to find out iif your system uses EFI or BIOS. To do that, open the terminal and use the following command to list your partitions:
+
+sudo fdisk -l
+
+Look closely in its output because it could be a huge output. If you see something like EFI, it’s an indication that your system has EFI. This information is important in later stages.
+
+Device        Start       End   Sectors   Size Type /dev/sda1     
+2048    976895    974848   476M EFI System /dev/sda2    976896 
+40038399  39061504  18.6G Linux filesystem /dev/sda3  40038400 
+79099903  39061504  18.6G Linux filesystem /dev/sda4  79099904
+468875263 389775360 185.9G Linux filesystem
+
+sudo mount /dev/sdb2 /mnt
+sudo mount --rbind /dev /mnt/dev
+sudo mount --rbind /proc /mnt/proc
+sudo mount --rbind /sys /mnt/sys
+sudo chroot /mnt
+sudo grub-install /dev/sda --force
+sudo update-grub
+reboot
+
+grub> ls
+grub> ls (hdX, Y)
+grub> set root=(hdX, Y)
+grub> set prefix=(hdX, Y)/boot/grub
+grub> insmod normal
+grub> normal
